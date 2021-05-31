@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,6 +26,7 @@
     }
   </style>
 </head>
+
 <body>
   <fieldset>
     <legend>Error Calculator</legend>
@@ -42,18 +44,25 @@
   </fieldset>
 
   <section id="error-btns">
-    <button>Console Log Demo</button>
-    <button>Console Error Demo</button>
-    <button>Console Dir</button>
-    <button>Console dirxml</button>
-    <button>Console Group Start</button>
-    <button>Console Group End</button>
-    <button>Console Table</button>
-    <button>Start Timer</button>
-    <button>End Timer</button>
-    <button>Console Trace</button>
-    <button>Trigger a Global Error</button>
+    <button onclick="logDemoTest()">Console Log Demo</button>
+    <button onclick="errorDemoTest()">Console Error Demo</button>
+    <button onclick="dirTest()">Console Dir</button>
+    <button onclick="dirxmlTest()">Console dirxml</button>
+    <button onclick="groupStartTest()">Console Group Start</button>
+    <button onclick="groupEndTest()">Console Group End</button>
+    <button onclick="tableTest()">Console Table</button>
+    <button onclick="startTimerTest()">Start Timer</button>
+    <button onclick="endTimerTest()">End Timer</button>
+    <button onclick="traceTest()">Console Trace</button>
+    <button onclick="globalErrorTest()">Trigger a Global Error</button>
   </section>
+
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({
+      token: "25833910f9ff43babbcbf8ed460de417"
+    });
+  </script>
 
   <script>
     let calculateBtn = document.querySelector('#calculate');
@@ -62,11 +71,85 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try {
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }
+      catch {
+        throw new CalculatorError('Invalid Input');
+      }
+      finally {
+        console.log('Calculator Input Processed');
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
-    // TODO - Make buttons functional
+
+    function logDemoTest() {
+      console.log('Console Log Demo');
+    }
+
+    function errorDemoTest() {
+      console.error('Console Error Demo');
+    }
+
+    function dirTest() {
+      console.dir(errorBtns[2]);
+    }
+
+    function dirxmlTest() {
+      console.log(document.body);
+    }
+
+    function groupStartTest() {
+      console.group('Log Group');
+    }
+
+    function groupEndTest() {
+      console.groupEnd();
+    }
+
+    function tableTest() {
+      console.table([{ name: "Software Engineering", num: 110 }, { name: "Programming Languages", num: 130 }, { name: "Advanced Software Engineering", num: 112 }]);
+    }
+
+    function startTimerTest() {
+      console.log('Timer started!');
+      console.time('Run Time');
+    }
+
+    function endTimerTest() {
+      console.log('Timer ended!');
+      console.timeEnd('Run Time');
+    }
+
+    function traceTest() {
+      deep();
+    }
+    function deep() {
+      deeper();
+    }
+    function deeper() {
+      deepest();
+    }
+    function deepest() {
+      console.trace();
+    }
+
+    function globalErrorTest() {
+      boom;
+    }
+    class CalculatorError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "CalculatorError";
+      }
+    }
+    window.onerror = () => {
+      console.log('Sadly an error happened friend');
+      TrackJS.track('Testing TrackJS!');
+    }
+
   </script>
 </body>
+
 </html>
